@@ -206,3 +206,28 @@ func BenchmarkInt64_UnmarshalJSON(b *testing.B) {
 		}
 	}
 }
+
+func TestInt64_MarshalUnmarshalJSON(t *testing.T) {
+	t.Run("Success marshal", func(t *testing.T) {
+		var err error
+		type A struct {
+			Amount *Int64
+		}
+		var source A
+		var target A
+
+		source.Amount, err = NewInt64(84)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		ajson, _ := json.Marshal(source)
+
+		err = json.Unmarshal(ajson, &target)
+		if !assert.NoError(t, err) {
+			t.FailNow()
+		}
+
+		assert.Equal(t, source, target)
+	})
+}
